@@ -1,0 +1,106 @@
+{
+  "name": "colourful-code",
+  "displayName": "Colourful Code",
+  "description": "Set different colour schemes for different workspace folders",
+  "version": "0.0.7",
+  "publisher": "denny-li-guang",
+  "license": "MIT",
+  "icon": "icon.png",
+  "keywords": [
+    "theme",
+    "color",
+    "colour",
+    "workspace",
+    "folder",
+    "multi-root",
+    "color-theme"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DennyLiSH/RH-VS-Colourful-Code"
+  },
+  "bugs": {
+    "url": "https://github.com/DennyLiSH/RH-VS-Colourful-Code/issues"
+  },
+  "homepage": "https://github.com/DennyLiSH/RH-VS-Colourful-Code#readme",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other",
+    "Themes"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "colourfulCode.setFolderTheme",
+        "title": "Set Folder Colour Scheme",
+        "category": "Colourful Code",
+        "icon": "$(color-mode)"
+      },
+      {
+        "command": "colourfulCode.removeFolderTheme",
+        "title": "Remove Folder Colour Scheme",
+        "category": "Colourful Code",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "colourfulCode.listFolderThemes",
+        "title": "List Folder Colour Schemes",
+        "category": "Colourful Code",
+        "icon": "$(list)"
+      },
+      {
+        "command": "colourfulCode.resetTheme",
+        "title": "Reset to Default Theme",
+        "category": "Colourful Code",
+        "icon": "$(discard)"
+      },
+      {
+        "command": "colourfulCode.toggleAutoSwitch",
+        "title": "Toggle Auto-Switch",
+        "category": "Colourful Code"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "colourfulCode.setFolderTheme",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "command": "colourfulCode.removeFolderTheme",
+          "when": "workspaceFolderCount > 0"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Colourful Code",
+      "properties": {
+        "colourfulCode.autoSwitch": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically switch colour scheme based on the active file's folder"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "typescript": "^4.9.0"
+  }
+}

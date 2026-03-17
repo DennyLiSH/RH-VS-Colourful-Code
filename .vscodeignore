@@ -1,0 +1,34 @@
+# VSCode development settings
+.vscode/**
+
+# Claude AI development files
+.claude/**
+
+# Company folders
+_*/**
+
+# Existing VSIX packages
+*.vsix
+
+# Source files (compiled output is included)
+**/*.ts
+tsconfig.json
+
+# Git
+.gitignore
+.git/**
+
+# Development configs
+.eslintrc.json
+.eslintignore
+.prettierrc
+.prettierignore
+
+# Test files (when tests are added)
+**/*.test.ts
+**/*.spec.ts
+__tests__/**
+test/**
+
+# Lock files (optional - can include for reproducibility)
+# package-lock.json

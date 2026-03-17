@@ -1,0 +1,97 @@
+# ============== 通用规则 ==============
+
+# --- IDE 和编辑器 ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
+# --- 操作系统 ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# --- 敏感信息 ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+credentials.*
+secrets.*
+
+# --- 日志和临时文件 ---
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.temp
+*.bak
+
+# --- 压缩包 ---
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ============== TypeScript ==============
+
+# --- 依赖 ---
+node_modules/
+.npm
+.yarn-integrity
+
+# --- npm/yarn 日志 ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# --- 缓存 ---
+.eslintcache
+.stylelintcache
+.node_repl_history
+*.tgz
+
+# --- TypeScript 编译输出 ---
+out/
+dist/
+build/
+lib/
+*.js.map
+*.d.ts
+*.d.ts.map
+
+# --- 保留 TypeScript 源文件 ---
+!src/**/*.ts
+!src/**/*.tsx
+
+# --- TypeScript 缓存 ---
+*.tsbuildinfo
+.tscache/
+
+# --- 测试覆盖率 ---
+coverage/
+.nyc_output/
+*.lcov
+
+# ============== VSCode 扩展 ==============
+
+# --- VSIX 打包文件 ---
+*.vsix
+
+# ============== 项目特定 ==============
+_*/
+# --- Claude 工作目录 ---
+.claude/
+
+

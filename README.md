@@ -2,6 +2,7 @@
 
 ![VSCode Version](https://img.shields.io/badge/VSCode-%3E%3D1.74.0-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Downloads](https://img.shields.io/visual-studio-marketplace/d/denny-li-guang.colourful-code.svg)
 
 **English** | [中文](#中文文档)
 

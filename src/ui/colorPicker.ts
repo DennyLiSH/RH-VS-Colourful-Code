@@ -93,7 +93,7 @@ export class ColorPicker {
     ];
 
     const selected = await vscode.window.showQuickPick(items, {
-      placeHolder: 'Choose a colour for your workspace',
+      placeHolder: 'Choose a color for your workspace',
       matchOnDescription: true,
       matchOnDetail: true,
     });
@@ -115,11 +115,11 @@ export class ColorPicker {
    */
   private static async showHexInput(): Promise<string | undefined> {
     return await vscode.window.showInputBox({
-      prompt: 'Enter colour hex code',
+      prompt: 'Enter color hex code',
       placeHolder: '#1e3a5f',
       validateInput: (value) => {
         if (!/^#[0-9A-Fa-f]{6}$/.test(value)) {
-          return 'Please enter a valid hex colour (e.g., #1e3a5f)';
+          return 'Please enter a valid hex color (e.g., #1e3a5f)';
         }
         return undefined;
       }

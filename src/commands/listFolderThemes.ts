@@ -16,12 +16,28 @@ export class ListFolderThemesCommand {
       return;
     }
 
-    const items = mappings.map(m => ({
-      label: `${m.enabled ? '$(check)' : '$(circle-slash)'} ${m.folderName}`,
-      description: m.colorScheme.name || m.colorScheme.colorTheme,
-      detail: m.folderPath,
-      mapping: m
-    }));
+    const presets = this.configManager.getPresetSchemes();
+
+    const items = mappings.map(m => {
+      const primaryColor = m.colorScheme.decorations['titleBar.activeBackground'] || '';
+
+      // 检查是否匹配预设方案
+      const matchedPreset = presets.find(p =>
+        p.colorScheme.decorations['titleBar.activeBackground'] === primaryColor
+      );
+
+      // 构建描述：Hex + 预设名称（如果匹配）
+      const description = matchedPreset
+        ? `${primaryColor} ${matchedPreset.name}`
+        : primaryColor;
+
+      return {
+        label: `${m.enabled ? '$(check)' : '$(circle-slash)'} ${m.folderName}`,
+        description,
+        detail: m.folderPath,
+        mapping: m
+      };
+    });
 
     const selected = await vscode.window.showQuickPick(items, {
       placeHolder: 'Configured folder theme mappings',

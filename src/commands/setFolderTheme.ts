@@ -66,7 +66,7 @@ export class SetFolderThemeCommand {
     await this.themeService.applyColorScheme(colorScheme, true);
 
     vscode.window.showInformationMessage(
-      `Colour scheme set for "${targetFolder.name}"`
+      `Color scheme set for "${targetFolder.name}"`
     );
   }
 
@@ -83,7 +83,7 @@ export class SetFolderThemeCommand {
     }));
 
     const selected = await vscode.window.showQuickPick(picks, {
-      placeHolder: 'Select a preset colour scheme'
+      placeHolder: 'Select a preset color scheme'
     });
 
     return selected?.preset.colorScheme;
@@ -103,7 +103,7 @@ export class SetFolderThemeCommand {
     }));
 
     const selectedTheme = await vscode.window.showQuickPick(themePicks, {
-      placeHolder: 'Select a colour theme'
+      placeHolder: 'Select a color theme'
     });
 
     if (!selectedTheme) {

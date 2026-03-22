@@ -1,4 +1,4 @@
-# Colourful Code
+# Colorful Code
 
 ![VSCode Version](https://img.shields.io/badge/VSCode-%3E%3D1.74.0-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -8,7 +8,7 @@
 
 > Assign different color themes to workspace folders. Never get lost in multi-root workspaces again!
 
-Working with multiple projects in a multi-root workspace? Keep forgetting which project you're editing? **Colourful Code** solves this by giving each folder its own color theme - so you always know exactly where you are.
+Working with multiple projects in a multi-root workspace? Keep forgetting which project you're editing? **Colorful Code** solves this by giving each folder its own color theme - so you always know exactly where you are.
 
 ## Features
 
@@ -21,7 +21,7 @@ Working with multiple projects in a multi-root workspace? Keep forgetting which 
 ### From VSCode Marketplace
 
 1. Open VSCode, press `Ctrl+Shift+X` (or `Cmd+Shift+X` on Mac) to open Extensions
-2. Search for `Colourful Code`
+2. Search for `Colorful Code`
 3. Click Install
 
 ### From VSIX
@@ -39,9 +39,9 @@ Press `Ctrl+Shift+P` to open the command palette:
 
 | Command | Description |
 |---------|-------------|
-| `Set Folder Colour Scheme` | Assign a color theme to the current folder |
-| `Remove Folder Colour Scheme` | Remove the theme mapping for a folder |
-| `List Folder Colour Schemes` | View all folder-theme mappings |
+| `Set Folder Color Scheme` | Assign a color theme to the current folder |
+| `Remove Folder Color Scheme` | Remove the theme mapping for a folder |
+| `List Folder Color Schemes` | View all folder-theme mappings |
 | `Reset to Default Theme` | Restore your original VSCode theme |
 | `Toggle Auto-Switch` | Enable/disable automatic theme switching |
 
@@ -89,7 +89,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 ### 从 VSCode 扩展市场安装
 
 1. 打开 VSCode，按 `Ctrl+Shift+X` 打开扩展面板
-2. 搜索 `Colourful Code`
+2. 搜索 `Colorful Code`
 3. 点击安装
 
 ### 从 VSIX 安装
@@ -107,9 +107,9 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 | 命令 | 说明 |
 |------|------|
-| `Set Folder Colour Scheme` | 为当前文件夹设置颜色方案 |
-| `Remove Folder Colour Scheme` | 移除文件夹的颜色方案 |
-| `List Folder Colour Schemes` | 列出所有文件夹的颜色方案 |
+| `Set Folder Color Scheme` | 为当前文件夹设置颜色方案 |
+| `Remove Folder Color Scheme` | 移除文件夹的颜色方案 |
+| `List Folder Color Schemes` | 列出所有文件夹的颜色方案 |
 | `Reset to Default Theme` | 重置为默认主题 |
 | `Toggle Auto-Switch` | 切换自动切换功能 |
 

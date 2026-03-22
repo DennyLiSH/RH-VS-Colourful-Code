@@ -1,8 +1,8 @@
 {
   "name": "colourful-code",
-  "displayName": "Colourful Code",
-  "description": "Set different colour schemes for different workspace folders",
-  "version": "0.1.0",
+  "displayName": "Colorful Code",
+  "description": "Set different color schemes for different workspace folders",
+  "version": "0.1.1",
   "publisher": "denny-li-guang",
   "license": "MIT",
   "icon": "icon.png",
@@ -38,32 +38,32 @@
     "commands": [
       {
         "command": "colourfulCode.setFolderTheme",
-        "title": "Set Folder Colour Scheme",
-        "category": "Colourful Code",
+        "title": "Set Folder Color Scheme",
+        "category": "Colorful Code",
         "icon": "$(color-mode)"
       },
       {
         "command": "colourfulCode.removeFolderTheme",
-        "title": "Remove Folder Colour Scheme",
-        "category": "Colourful Code",
+        "title": "Remove Folder Color Scheme",
+        "category": "Colorful Code",
         "icon": "$(trash)"
       },
       {
         "command": "colourfulCode.listFolderThemes",
-        "title": "List Folder Colour Schemes",
-        "category": "Colourful Code",
+        "title": "List Folder Color Schemes",
+        "category": "Colorful Code",
         "icon": "$(list)"
       },
       {
         "command": "colourfulCode.resetTheme",
         "title": "Reset to Default Theme",
-        "category": "Colourful Code",
+        "category": "Colorful Code",
         "icon": "$(discard)"
       },
       {
         "command": "colourfulCode.toggleAutoSwitch",
         "title": "Toggle Auto-Switch",
-        "category": "Colourful Code"
+        "category": "Colorful Code"
       }
     ],
     "menus": {
@@ -79,12 +79,12 @@
       ]
     },
     "configuration": {
-      "title": "Colourful Code",
+      "title": "Colorful Code",
       "properties": {
         "colourfulCode.autoSwitch": {
           "type": "boolean",
           "default": true,
-          "description": "Automatically switch colour scheme based on the active file's folder"
+          "description": "Automatically switch color scheme based on the active file's folder"
         }
       }
     }

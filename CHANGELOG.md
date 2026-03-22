@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - "List Folder Color Schemes" now displays hex color code with preset name (e.g., `#1a4d1a Forest Green`) when using preset colors
-- Updated branding from "Colourful Code" to "Colorful Code" (American spelling) for better discoverability
+- Renamed extension to "Colorful Folder" ("Colorful Code" was already taken on Marketplace)
 
 ## [0.1.0] - 2026-03-17
 

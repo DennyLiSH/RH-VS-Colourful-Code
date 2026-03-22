@@ -1,6 +1,6 @@
 {
   "name": "colourful-code",
-  "displayName": "Colorful Code",
+  "displayName": "Colorful Folder",
   "description": "Set different color schemes for different workspace folders",
   "version": "0.1.1",
   "publisher": "denny-li-guang",
@@ -39,25 +39,25 @@
       {
         "command": "colourfulCode.setFolderTheme",
         "title": "Set Folder Color Scheme",
-        "category": "Colorful Code",
+        "category": "Colorful Folder",
         "icon": "$(color-mode)"
       },
       {
         "command": "colourfulCode.removeFolderTheme",
         "title": "Remove Folder Color Scheme",
-        "category": "Colorful Code",
+        "category": "Colorful Folder",
         "icon": "$(trash)"
       },
       {
         "command": "colourfulCode.listFolderThemes",
         "title": "List Folder Color Schemes",
-        "category": "Colorful Code",
+        "category": "Colorful Folder",
         "icon": "$(list)"
       },
       {
         "command": "colourfulCode.resetTheme",
         "title": "Reset to Default Theme",
-        "category": "Colorful Code",
+        "category": "Colorful Folder",
         "icon": "$(discard)"
       },
       {
@@ -79,7 +79,7 @@
       ]
     },
     "configuration": {
-      "title": "Colorful Code",
+      "title": "Colorful Folder",
       "properties": {
         "colourfulCode.autoSwitch": {
           "type": "boolean",

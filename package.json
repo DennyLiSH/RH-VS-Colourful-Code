@@ -2,7 +2,7 @@
   "name": "colourful-code",
   "displayName": "Colorful Folder",
   "description": "Set different color schemes for different workspace folders",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "denny-li-guang",
   "license": "MIT",
   "icon": "icon.png",
@@ -63,7 +63,7 @@
       {
         "command": "colourfulCode.toggleAutoSwitch",
         "title": "Toggle Auto-Switch",
-        "category": "Colorful Code"
+        "category": "Colorful Folder"
       }
     ],
     "menus": {

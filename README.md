@@ -1,4 +1,4 @@
-# Colorful Code
+# Colorful Folder
 
 ![VSCode Version](https://img.shields.io/badge/VSCode-%3E%3D1.74.0-blue.svg)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
@@ -8,7 +8,7 @@
 
 > Assign different color themes to workspace folders. Never get lost in multi-root workspaces again!
 
-Working with multiple projects in a multi-root workspace? Keep forgetting which project you're editing? **Colorful Code** solves this by giving each folder its own color theme - so you always know exactly where you are.
+Working with multiple projects in a multi-root workspace? Keep forgetting which project you're editing? **Colorful Folder** solves this by giving each folder its own color theme - so you always know exactly where you are.
 
 ## Features
 
@@ -21,7 +21,7 @@ Working with multiple projects in a multi-root workspace? Keep forgetting which 
 ### From VSCode Marketplace
 
 1. Open VSCode, press `Ctrl+Shift+X` (or `Cmd+Shift+X` on Mac) to open Extensions
-2. Search for `Colorful Code`
+2. Search for `Colorful Folder`
 3. Click Install
 
 ### From VSIX
@@ -54,7 +54,7 @@ Press `Ctrl+Shift+P` to open the command palette:
 Before uninstalling this extension, it's recommended to reset your theme first:
 
 1. Press `Ctrl+Shift+P` (or `Cmd+Shift+P` on Mac) to open the command palette
-2. Type `ColourfulCode: Reset to Default Theme`
+2. Type `Colorful Folder: Reset to Default Theme`
 3. Execute the command to restore your original theme
 4. Then uninstall the extension
 
@@ -89,7 +89,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 ### 从 VSCode 扩展市场安装
 
 1. 打开 VSCode，按 `Ctrl+Shift+X` 打开扩展面板
-2. 搜索 `Colorful Code`
+2. 搜索 `Colorful Folder`
 3. 点击安装
 
 ### 从 VSIX 安装
@@ -122,7 +122,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 在卸载此扩展之前，建议先重置主题：
 
 1. 按 `Ctrl+Shift+P`（Mac: `Cmd+Shift+P`）打开命令面板
-2. 输入 `ColourfulCode: Reset to Default Theme`
+2. 输入 `Colorful Folder: Reset to Default Theme`
 3. 执行命令后，主题将恢复为安装插件前的设置
 4. 然后再卸载插件
 

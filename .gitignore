@@ -93,5 +93,5 @@ coverage/
 _*/
 # --- Claude 工作目录 ---
 .claude/
-
+CLAUDE.md
 

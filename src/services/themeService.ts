@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { ColorScheme, ColorDecorations } from '../models/types';
+import { ColorScheme, ColorDecorations, ThemeInfo } from '../models/types';
 
 export class ThemeService {
   private static instance: ThemeService | null = null;
@@ -57,7 +57,7 @@ export class ThemeService {
   /**
    * 应用整体颜色主题
    */
-  private async applyColorTheme(themeId: string): Promise<void> {
+  async applyColorTheme(themeId: string): Promise<void> {
     const config = vscode.workspace.getConfiguration('workbench');
     await config.update(
       'colorTheme',
@@ -128,26 +128,52 @@ export class ThemeService {
 
   /**
    * 获取所有可用的颜色主题
+   * 内置主题保底 + 动态扫描已安装扩展贡献的主题
    */
-  async getAvailableThemes(): Promise<{ id: string; label: string }[]> {
-    // 常见的内置主题和流行主题
-    const builtInThemes = [
-      { id: 'Default Dark+', label: 'Dark+ (default dark)' },
-      { id: 'Default Light+', label: 'Light+ (default light)' },
-      { id: 'Visual Studio Dark', label: 'Visual Studio Dark' },
-      { id: 'Visual Studio Light', label: 'Visual Studio Light' },
-      { id: 'Monokai', label: 'Monokai' },
-      { id: 'Solarized Dark', label: 'Solarized Dark' },
-      { id: 'Solarized Light', label: 'Solarized Light' },
-      { id: 'One Dark Pro', label: 'One Dark Pro' },
-      { id: 'Dracula', label: 'Dracula' },
-      { id: 'GitHub Dark', label: 'GitHub Dark' },
-      { id: 'GitHub Light', label: 'GitHub Light' },
-      { id: 'Material Theme', label: 'Material Theme' },
-      { id: 'Nord', label: 'Nord' },
-      { id: 'Gruvbox', label: 'Gruvbox' }
+  async getAvailableThemes(): Promise<ThemeInfo[]> {
+    const themes: ThemeInfo[] = [];
+    const seen = new Set<string>();
+
+    // 1. 先加入 VSCode 内置主题（保底）
+    const builtInThemes: ThemeInfo[] = [
+      { id: 'Default Dark+', label: 'Dark+ (default dark)', type: 'vs-dark' },
+      { id: 'Default Light+', label: 'Light+ (default light)', type: 'vs' },
+      { id: 'Visual Studio Dark', label: 'Visual Studio Dark', type: 'vs-dark' },
+      { id: 'Visual Studio Light', label: 'Visual Studio Light', type: 'vs' },
+      { id: 'Abyss', label: 'Abyss', type: 'vs-dark' },
+      { id: 'Kimbie Dark', label: 'Kimbie Dark', type: 'vs-dark' },
+      { id: 'Monokai', label: 'Monokai', type: 'vs-dark' },
+      { id: 'Monokai Dimmed', label: 'Monokai Dimmed', type: 'vs-dark' },
+      { id: 'Quiet Light', label: 'Quiet Light', type: 'vs' },
+      { id: 'Red', label: 'Red', type: 'vs-dark' },
+      { id: 'Solarized Dark', label: 'Solarized Dark', type: 'vs-dark' },
+      { id: 'Solarized Light', label: 'Solarized Light', type: 'vs' },
+      { id: 'Tomorrow Night Blue', label: 'Tomorrow Night Blue', type: 'vs-dark' }
     ];
 
-    return builtInThemes;
+    for (const t of builtInThemes) {
+      themes.push(t);
+      seen.add(t.id);
+    }
+
+    // 2. 动态扫描已安装扩展贡献的主题（去重合并）
+    for (const extension of vscode.extensions.all) {
+      const contributes = extension.packageJSON?.contributes;
+      if (contributes?.themes && Array.isArray(contributes.themes)) {
+        for (const theme of contributes.themes) {
+          const themeId = theme.id || theme.label;
+          if (themeId && theme.label && !seen.has(themeId)) {
+            seen.add(themeId);
+            themes.push({
+              id: themeId,
+              label: theme.label,
+              type: theme.uiTheme || 'vs-dark'
+            });
+          }
+        }
+      }
+    }
+
+    return themes;
   }
 }

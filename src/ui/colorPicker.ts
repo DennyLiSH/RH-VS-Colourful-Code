@@ -70,7 +70,7 @@ export class ColorPicker {
   /**
    * 为颜色创建 SVG 图标
    */
-  private static createColorIcon(colorHex: string): vscode.Uri {
+  static createColorIcon(colorHex: string): vscode.Uri {
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="10" fill="${colorHex}" stroke="#666666" stroke-width="1"/>
     </svg>`;
@@ -79,9 +79,16 @@ export class ColorPicker {
 
   /**
    * 显示颜色选择器
+   * @param themeType 主题类型，用于显示对应的提示文字
    * @returns 选中的颜色 hex 值，或 undefined（用户取消）
    */
-  static async show(): Promise<string | undefined> {
+  static async show(themeType?: 'light' | 'dark'): Promise<string | undefined> {
+    const placeHolder = themeType === 'light'
+      ? 'Choose a color for Light theme (light colors recommended)'
+      : themeType === 'dark'
+        ? 'Choose a color for Dark theme (dark colors recommended)'
+        : 'Choose a color for your workspace';
+
     const items: ColorPickItem[] = [
       ...this.PRESET_COLORS.map(c => ({
         ...c,
@@ -93,7 +100,7 @@ export class ColorPicker {
     ];
 
     const selected = await vscode.window.showQuickPick(items, {
-      placeHolder: 'Choose a color for your workspace',
+      placeHolder,
       matchOnDescription: true,
       matchOnDetail: true,
     });

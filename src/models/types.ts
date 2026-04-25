@@ -105,6 +105,8 @@ export interface PresetScheme {
   id: string;
   name: string;
   colorScheme: ColorScheme;
+  /** 该配色更适合的编辑器主题类型，仅用于 UI 提示 */
+  themeType?: 'light' | 'dark' | 'both';
 }
 
 /**

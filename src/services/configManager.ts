@@ -2,13 +2,14 @@ import * as vscode from 'vscode';
 import { ExtensionConfig, FolderThemeMapping, PresetScheme, ExtensionSettings, ColorScheme } from '../models/types';
 
 const CONFIG_KEY = 'colourfulCode.config';
-const CURRENT_VERSION = '1.0.0';
+const CURRENT_VERSION = '1.1.0';
 
 // 默认预设方案
 const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-blue',
     name: 'Ocean Blue',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -26,6 +27,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-green',
     name: 'Forest Green',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -43,6 +45,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-purple',
     name: 'Royal Purple',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -60,6 +63,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-orange',
     name: 'Sunset Orange',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -77,6 +81,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-red',
     name: 'Crimson Red',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -94,6 +99,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-amber',
     name: 'Golden Amber',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -111,6 +117,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-teal',
     name: 'Deep Teal',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -128,6 +135,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-slate',
     name: 'Slate Gray',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -145,6 +153,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-midnight',
     name: 'Midnight Blue',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -162,6 +171,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-jade',
     name: 'Jade Garden',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -179,6 +189,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-grape',
     name: 'Grape Vine',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -196,6 +207,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-ruby',
     name: 'Ruby Red',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -213,6 +225,7 @@ const DEFAULT_PRESETS: PresetScheme[] = [
   {
     id: 'preset-burnt-sienna',
     name: 'Burnt Sienna',
+    themeType: 'dark',
     colorScheme: {
       colorTheme: 'Default Dark+',
       decorations: {
@@ -224,6 +237,150 @@ const DEFAULT_PRESETS: PresetScheme[] = [
         'tab.activeBackground': '#e67520',
         'tab.inactiveBackground': '#cc5500',
         'editorGroup.border': '#ff9540'
+      }
+    }
+  },
+  {
+    id: 'preset-light-mist',
+    name: 'Morning Mist',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#c5d5e8',
+        'titleBar.activeForeground': '#1a2a3a',
+        'activityBar.background': '#c5d5e8',
+        'sideBar.background': '#e8eef5',
+        'statusBar.background': '#c5d5e8',
+        'tab.activeBackground': '#d5e3f0',
+        'tab.inactiveBackground': '#c5d5e8',
+        'editorGroup.border': '#a5b5c8'
+      }
+    }
+  },
+  {
+    id: 'preset-light-cream',
+    name: 'Soft Cream',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#e8dcc8',
+        'titleBar.activeForeground': '#3a3020',
+        'activityBar.background': '#e8dcc8',
+        'sideBar.background': '#f5f0e8',
+        'statusBar.background': '#e8dcc8',
+        'tab.activeBackground': '#efe6d8',
+        'tab.inactiveBackground': '#e8dcc8',
+        'editorGroup.border': '#d8ccb8'
+      }
+    }
+  },
+  {
+    id: 'preset-light-mint',
+    name: 'Mint Breeze',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#c8e8d8',
+        'titleBar.activeForeground': '#1a3a2a',
+        'activityBar.background': '#c8e8d8',
+        'sideBar.background': '#e8f5f0',
+        'statusBar.background': '#c8e8d8',
+        'tab.activeBackground': '#d8eee8',
+        'tab.inactiveBackground': '#c8e8d8',
+        'editorGroup.border': '#a8d8c8'
+      }
+    }
+  },
+  {
+    id: 'preset-light-lavender',
+    name: 'Lavender Blush',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#d8c8e8',
+        'titleBar.activeForeground': '#2a1a3a',
+        'activityBar.background': '#d8c8e8',
+        'sideBar.background': '#f0e8f5',
+        'statusBar.background': '#d8c8e8',
+        'tab.activeBackground': '#e4d8f0',
+        'tab.inactiveBackground': '#d8c8e8',
+        'editorGroup.border': '#c8b8d8'
+      }
+    }
+  },
+  {
+    id: 'preset-light-peach',
+    name: 'Peach Sorbet',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#e8c8b8',
+        'titleBar.activeForeground': '#3a2010',
+        'activityBar.background': '#e8c8b8',
+        'sideBar.background': '#f5e8e0',
+        'statusBar.background': '#e8c8b8',
+        'tab.activeBackground': '#eed8d0',
+        'tab.inactiveBackground': '#e8c8b8',
+        'editorGroup.border': '#d8b8a8'
+      }
+    }
+  },
+  {
+    id: 'preset-light-sky',
+    name: 'Sky Light',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#b8d8f0',
+        'titleBar.activeForeground': '#1a2a3a',
+        'activityBar.background': '#b8d8f0',
+        'sideBar.background': '#e0eef8',
+        'statusBar.background': '#b8d8f0',
+        'tab.activeBackground': '#c8e3f5',
+        'tab.inactiveBackground': '#b8d8f0',
+        'editorGroup.border': '#98c0e0'
+      }
+    }
+  },
+  {
+    id: 'preset-light-sage',
+    name: 'Sage Garden',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#c8d8b8',
+        'titleBar.activeForeground': '#2a3a1a',
+        'activityBar.background': '#c8d8b8',
+        'sideBar.background': '#e8f0e0',
+        'statusBar.background': '#c8d8b8',
+        'tab.activeBackground': '#d8e8d0',
+        'tab.inactiveBackground': '#c8d8b8',
+        'editorGroup.border': '#a8c898'
+      }
+    }
+  },
+  {
+    id: 'preset-light-rose',
+    name: 'Rose Quartz',
+    themeType: 'light',
+    colorScheme: {
+      colorTheme: 'Default Light+',
+      decorations: {
+        'titleBar.activeBackground': '#e8c8d0',
+        'titleBar.activeForeground': '#3a1a20',
+        'activityBar.background': '#e8c8d0',
+        'sideBar.background': '#f5e8ec',
+        'statusBar.background': '#e8c8d0',
+        'tab.activeBackground': '#eed8e0',
+        'tab.inactiveBackground': '#e8c8d0',
+        'editorGroup.border': '#d8b0b8'
       }
     }
   }
@@ -272,6 +429,19 @@ export class ConfigManager {
       this.saveConfig(stored);
     }
 
+    // 补齐现有 preset 的新增字段（如 themeType）
+    let needsUpdate = false;
+    for (const preset of stored.presetSchemes) {
+      const defaultPreset = DEFAULT_PRESETS.find(p => p.id === preset.id);
+      if (defaultPreset && preset.themeType === undefined && defaultPreset.themeType !== undefined) {
+        preset.themeType = defaultPreset.themeType;
+        needsUpdate = true;
+      }
+    }
+    if (needsUpdate) {
+      this.saveConfig(stored);
+    }
+
     // 检查是否需要迁移
     if (stored.version !== CURRENT_VERSION) {
       return this.migrateConfig(stored);
@@ -293,6 +463,14 @@ export class ConfigManager {
    * 配置迁移
    */
   private migrateConfig(oldConfig: ExtensionConfig): ExtensionConfig {
+    // 补齐 preset 的 themeType 字段
+    for (const preset of oldConfig.presetSchemes) {
+      const defaultPreset = DEFAULT_PRESETS.find(p => p.id === preset.id);
+      if (defaultPreset && preset.themeType === undefined && defaultPreset.themeType !== undefined) {
+        preset.themeType = defaultPreset.themeType;
+      }
+    }
+
     const newConfig: ExtensionConfig = {
       ...oldConfig,
       version: CURRENT_VERSION

@@ -45,8 +45,30 @@ export class SetFolderThemeCommand {
       targetFolder = selected.folder;
     }
 
-    // 2. 快速颜色配置
-    const colorScheme = await this.quickColorConfiguration();
+    // 2. 选择配置方式
+    const modePick = await vscode.window.showQuickPick([
+      { label: '$(symbol-color) Preset Scheme', description: 'Choose from predefined schemes with theme hints', value: 'preset' },
+      { label: '$(pencil) Custom Color', description: 'Pick a custom color and theme', value: 'custom' },
+      { label: '$(rocket) Quick Config', description: 'Keep current theme, change UI colors only', value: 'quick' }
+    ], { placeHolder: 'Select configuration mode' });
+
+    if (!modePick) {
+      return;
+    }
+
+    let colorScheme: ColorScheme | undefined;
+    switch (modePick.value) {
+      case 'preset':
+        colorScheme = await this.selectPreset();
+        break;
+      case 'custom':
+        colorScheme = await this.customConfiguration();
+        break;
+      case 'quick':
+      default:
+        colorScheme = await this.quickColorConfiguration();
+        break;
+    }
 
     if (!colorScheme) {
       return;
@@ -64,6 +86,7 @@ export class SetFolderThemeCommand {
 
     // 4. 立即应用
     await this.themeService.applyColorScheme(colorScheme, true);
+    this.themeService.setCurrentAppliedFolder(targetFolder.uri.fsPath);
 
     vscode.window.showInformationMessage(
       `Color scheme set for "${targetFolder.name}"`
@@ -76,11 +99,16 @@ export class SetFolderThemeCommand {
   private async selectPreset(): Promise<ColorScheme | undefined> {
     const presets = this.configManager.getPresetSchemes();
 
-    const picks = presets.map(p => ({
-      label: p.name,
-      description: `Theme: ${p.colorScheme.colorTheme}`,
-      preset: p
-    }));
+    const picks = presets.map(p => {
+      const typeLabel = p.themeType === 'light' ? '☀️ Light' : p.themeType === 'dark' ? '🌙 Dark' : '💡 Both';
+      const primaryColor = p.colorScheme.decorations['titleBar.activeBackground'] || '#888888';
+      return {
+        label: p.name,
+        description: `${typeLabel} · Theme: ${p.colorScheme.colorTheme}`,
+        iconPath: ColorPicker.createColorIcon(primaryColor),
+        preset: p
+      };
+    });
 
     const selected = await vscode.window.showQuickPick(picks, {
       placeHolder: 'Select a preset color scheme'
@@ -96,10 +124,19 @@ export class SetFolderThemeCommand {
     // 选择颜色主题
     const themes = await this.themeService.getAvailableThemes();
 
+    const typeColorMap: Record<string, string> = {
+      'vs': '#e8e8e8',
+      'vs-dark': '#2d2d30',
+      'hc-black': '#000000',
+      'hc-light': '#ffffff'
+    };
+
     const themePicks = themes.map(t => ({
       label: t.label,
       description: t.id,
-      id: t.id
+      iconPath: ColorPicker.createColorIcon(typeColorMap[t.type] || '#888888'),
+      id: t.id,
+      type: t.type
     }));
 
     const selectedTheme = await vscode.window.showQuickPick(themePicks, {
@@ -110,15 +147,22 @@ export class SetFolderThemeCommand {
       return undefined;
     }
 
+    // 立即应用选中的主题，让用户在选择颜色时能看到实际效果
+    await this.themeService.applyColorTheme(selectedTheme.id);
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    // 判断主题类型
+    const themeType: 'light' | 'dark' = selectedTheme.type === 'vs' || selectedTheme.type === 'hc-light' ? 'light' : 'dark';
+
     // 选择主色调
-    const primaryColor = await ColorPicker.show();
+    const primaryColor = await ColorPicker.show(themeType);
 
     if (!primaryColor) {
       return undefined;
     }
 
     // 生成装饰色
-    const decorations = this.generateDecorations(primaryColor);
+    const decorations = this.generateDecorations(primaryColor, themeType);
 
     return {
       colorTheme: selectedTheme.id,
@@ -132,14 +176,20 @@ export class SetFolderThemeCommand {
    */
   private async quickColorConfiguration(): Promise<ColorScheme | undefined> {
     // 只设置边框/标题栏颜色，保持当前主题
-    const color = await ColorPicker.show();
+    const currentTheme = this.themeService.getCurrentTheme();
+
+    // 判断当前主题类型
+    const themes = await this.themeService.getAvailableThemes();
+    const currentThemeInfo = themes.find(t => t.id === currentTheme);
+    const themeType: 'light' | 'dark' = currentThemeInfo?.type === 'vs' || currentThemeInfo?.type === 'hc-light' ? 'light' : 'dark';
+
+    const color = await ColorPicker.show(themeType);
 
     if (!color) {
       return undefined;
     }
 
-    const currentTheme = this.themeService.getCurrentTheme();
-    const decorations = this.generateDecorations(color);
+    const decorations = this.generateDecorations(color, themeType);
 
     return {
       colorTheme: currentTheme,
@@ -150,9 +200,38 @@ export class SetFolderThemeCommand {
 
   /**
    * 根据主色调生成装饰色配置
+   * @param primaryColor 主色调
+   * @param themeType 主题类型，决定生成 light 还是 dark 风格的装饰色
    */
-  private generateDecorations(primaryColor: string): ColorDecorations {
-    // 生成较深的背景色和较亮的强调色
+  private generateDecorations(primaryColor: string, themeType: 'light' | 'dark' = 'dark'): ColorDecorations {
+    if (themeType === 'light') {
+      const borderColor = this.darkenColor(primaryColor, 0.1);
+      const lighterBg = this.lightenColor(primaryColor, 0.3);
+
+      return {
+        'titleBar.activeBackground': primaryColor,
+        'titleBar.activeForeground': '#1a1a1a',
+        'titleBar.inactiveBackground': lighterBg,
+        'titleBar.inactiveForeground': '#666666',
+        'activityBar.background': primaryColor,
+        'activityBar.foreground': '#1a1a1a',
+        'activityBar.activeBorder': borderColor,
+        'sideBar.background': lighterBg,
+        'sideBar.foreground': '#1a1a1a',
+        'sideBarTitle.foreground': '#1a1a1a',
+        'statusBar.background': primaryColor,
+        'statusBar.foreground': '#1a1a1a',
+        'tab.activeBackground': lighterBg,
+        'tab.activeForeground': '#1a1a1a',
+        'tab.inactiveBackground': primaryColor,
+        'tab.inactiveForeground': '#666666',
+        'tab.border': borderColor,
+        'editorGroup.border': borderColor,
+        'editorGroupHeader.tabsBackground': lighterBg
+      };
+    }
+
+    // Dark mode (existing logic)
     const darkerColor = this.darkenColor(primaryColor, 0.3);
     const lighterColor = this.lightenColor(primaryColor, 0.2);
 

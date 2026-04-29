@@ -9,6 +9,7 @@ export class FolderDetectionService {
   private disposables: vscode.Disposable[] = [];
   private lastActiveFolder: string | null = null;
   private isApplying: boolean = false;
+  private suppressed: boolean = false;
 
   constructor(configManager: ConfigManager, themeService: ThemeService) {
     this.configManager = configManager;
@@ -66,7 +67,7 @@ export class FolderDetectionService {
    * 活动编辑器变化处理
    */
   private async onActiveEditorChanged(editor: vscode.TextEditor | undefined): Promise<void> {
-    if (!editor || this.isApplying) {
+    if (!editor || this.isApplying || this.suppressed) {
       return;
     }
 
@@ -139,6 +140,20 @@ export class FolderDetectionService {
     if (editor) {
       await this.onActiveEditorChanged(editor);
     }
+  }
+
+  /**
+   * 抑制自动切换（预览期间使用）
+   */
+  suppress(): void {
+    this.suppressed = true;
+  }
+
+  /**
+   * 恢复自动切换
+   */
+  resume(): void {
+    this.suppressed = false;
   }
 
   /**

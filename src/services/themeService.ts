@@ -1,6 +1,11 @@
 import * as vscode from 'vscode';
 import { ColorScheme, ColorDecorations, ThemeInfo } from '../models/types';
 
+export interface ThemeSnapshot {
+  colorTheme: string;
+  decorations: ColorDecorations | undefined;
+}
+
 export class ThemeService {
   private static instance: ThemeService | null = null;
   private currentAppliedFolder: string | null = null;
@@ -103,6 +108,42 @@ export class ThemeService {
     }
 
     this.currentAppliedFolder = null;
+  }
+
+  /**
+   * 保存当前主题状态的快照（用于预览恢复）
+   */
+  snapshotCurrentState(): ThemeSnapshot {
+    const config = vscode.workspace.getConfiguration('workbench');
+    return {
+      colorTheme: config.get<string>('colorTheme', 'Default Dark+'),
+      decorations: config.get<ColorDecorations>('colorCustomizations') ?? undefined
+    };
+  }
+
+  /**
+   * 从快照恢复主题状态
+   */
+  async restoreFromSnapshot(snapshot: ThemeSnapshot): Promise<void> {
+    await this.applyColorTheme(snapshot.colorTheme);
+    const config = vscode.workspace.getConfiguration('workbench');
+    await config.update(
+      'colorCustomizations',
+      snapshot.decorations ?? undefined,
+      vscode.ConfigurationTarget.Workspace
+    );
+  }
+
+  /**
+   * 仅应用装饰色（不改主题，用于颜色预览）
+   */
+  async applyDecorationsOnly(decorations: ColorDecorations): Promise<void> {
+    const config = vscode.workspace.getConfiguration('workbench');
+    await config.update(
+      'colorCustomizations',
+      decorations,
+      vscode.ConfigurationTarget.Workspace
+    );
   }
 
   /**

@@ -1,16 +1,19 @@
 import * as vscode from 'vscode';
 import { ConfigManager } from '../services/configManager';
 import { ThemeService } from '../services/themeService';
-import { FolderThemeMapping, ColorScheme, ColorDecorations } from '../models/types';
+import { FolderDetectionService } from '../services/folderDetectionService';
+import { FolderThemeMapping, ColorScheme, ColorDecorations, PresetScheme } from '../models/types';
 import { ColorPicker } from '../ui/colorPicker';
 
 export class SetFolderThemeCommand {
   private configManager: ConfigManager;
   private themeService: ThemeService;
+  private folderDetectionService: FolderDetectionService;
 
-  constructor(configManager: ConfigManager, themeService: ThemeService) {
+  constructor(configManager: ConfigManager, themeService: ThemeService, folderDetectionService: FolderDetectionService) {
     this.configManager = configManager;
     this.themeService = ThemeService.getInstance();
+    this.folderDetectionService = folderDetectionService;
   }
 
   /**
@@ -94,12 +97,18 @@ export class SetFolderThemeCommand {
   }
 
   /**
-   * 选择预设方案
+   * 选择预设方案（支持实时预览）
    */
   private async selectPreset(): Promise<ColorScheme | undefined> {
     const presets = this.configManager.getPresetSchemes();
+    const snapshot = this.themeService.snapshotCurrentState();
+    this.folderDetectionService.suppress();
 
-    const picks = presets.map(p => {
+    interface PresetPickItem extends vscode.QuickPickItem {
+      preset: PresetScheme;
+    }
+
+    const picks: PresetPickItem[] = presets.map(p => {
       const typeLabel = p.themeType === 'light' ? '☀️ Light' : p.themeType === 'dark' ? '🌙 Dark' : '💡 Both';
       const primaryColor = p.colorScheme.decorations['titleBar.activeBackground'] || '#888888';
       return {
@@ -110,18 +119,65 @@ export class SetFolderThemeCommand {
       };
     });
 
-    const selected = await vscode.window.showQuickPick(picks, {
-      placeHolder: 'Select a preset color scheme'
+    const quickPick = vscode.window.createQuickPick<PresetPickItem>();
+    quickPick.items = picks;
+    quickPick.placeholder = 'Select a preset scheme (Up/Down to preview)';
+    quickPick.canSelectMany = false;
+    quickPick.matchOnDescription = true;
+
+    let previewTimeout: ReturnType<typeof setTimeout> | undefined;
+    let resolved = false;
+
+    const selectedPreset = await new Promise<PresetScheme | undefined>((resolve) => {
+      quickPick.onDidAccept(() => {
+        resolved = true;
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        const item = quickPick.activeItems[0];
+        quickPick.hide();
+        resolve(item?.preset);
+      });
+
+      quickPick.onDidChangeActive((activeItems) => {
+        if (resolved) { return; }
+        const active = activeItems[0];
+        if (!active) { return; }
+
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        previewTimeout = setTimeout(() => {
+          previewTimeout = undefined;
+          this.themeService.applyColorScheme(active.preset.colorScheme, true);
+        }, 200);
+      });
+
+      quickPick.onDidHide(() => {
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        if (!resolved) {
+          resolved = true;
+          resolve(undefined);
+        }
+      });
+
+      quickPick.show();
     });
 
-    return selected?.preset.colorScheme;
+    quickPick.dispose();
+
+    if (!selectedPreset) {
+      await this.themeService.restoreFromSnapshot(snapshot);
+    }
+    this.folderDetectionService.resume();
+
+    return selectedPreset?.colorScheme;
   }
 
   /**
-   * 自定义配置
+   * 自定义配置（支持实时预览）
    */
   private async customConfiguration(): Promise<ColorScheme | undefined> {
-    // 选择颜色主题
+    const snapshot = this.themeService.snapshotCurrentState();
+    this.folderDetectionService.suppress();
+
+    // --- Step 1: Theme selection with live preview ---
     const themes = await this.themeService.getAvailableThemes();
 
     const typeColorMap: Record<string, string> = {
@@ -131,7 +187,12 @@ export class SetFolderThemeCommand {
       'hc-light': '#ffffff'
     };
 
-    const themePicks = themes.map(t => ({
+    interface ThemePickItem extends vscode.QuickPickItem {
+      id: string;
+      type: string;
+    }
+
+    const themePicks: ThemePickItem[] = themes.map(t => ({
       label: t.label,
       description: t.id,
       iconPath: ColorPicker.createColorIcon(typeColorMap[t.type] || '#888888'),
@@ -139,30 +200,74 @@ export class SetFolderThemeCommand {
       type: t.type
     }));
 
-    const selectedTheme = await vscode.window.showQuickPick(themePicks, {
-      placeHolder: 'Select a color theme'
+    const themeQuickPick = vscode.window.createQuickPick<ThemePickItem>();
+    themeQuickPick.items = themePicks;
+    themeQuickPick.placeholder = 'Select a color theme (Up/Down to preview)';
+    themeQuickPick.canSelectMany = false;
+    themeQuickPick.matchOnDescription = true;
+
+    let themePreviewTimeout: ReturnType<typeof setTimeout> | undefined;
+    let themeResolved = false;
+
+    const selectedTheme = await new Promise<ThemePickItem | undefined>((resolve) => {
+      themeQuickPick.onDidAccept(() => {
+        themeResolved = true;
+        if (themePreviewTimeout) { clearTimeout(themePreviewTimeout); }
+        const item = themeQuickPick.activeItems[0];
+        themeQuickPick.hide();
+        resolve(item);
+      });
+
+      themeQuickPick.onDidChangeActive((activeItems) => {
+        if (themeResolved) { return; }
+        const active = activeItems[0];
+        if (!active) { return; }
+
+        if (themePreviewTimeout) { clearTimeout(themePreviewTimeout); }
+        themePreviewTimeout = setTimeout(() => {
+          themePreviewTimeout = undefined;
+          this.themeService.applyColorTheme(active.id);
+        }, 200);
+      });
+
+      themeQuickPick.onDidHide(() => {
+        if (themePreviewTimeout) { clearTimeout(themePreviewTimeout); }
+        if (!themeResolved) {
+          themeResolved = true;
+          resolve(undefined);
+        }
+      });
+
+      themeQuickPick.show();
     });
 
+    themeQuickPick.dispose();
+
     if (!selectedTheme) {
+      await this.themeService.restoreFromSnapshot(snapshot);
+      this.folderDetectionService.resume();
       return undefined;
     }
 
-    // 立即应用选中的主题，让用户在选择颜色时能看到实际效果
-    await this.themeService.applyColorTheme(selectedTheme.id);
+    // Wait for theme to fully apply before showing color picker
     await new Promise(resolve => setTimeout(resolve, 300));
 
-    // 判断主题类型
+    // --- Step 2: Color selection with live preview ---
     const themeType: 'light' | 'dark' = selectedTheme.type === 'vs' || selectedTheme.type === 'hc-light' ? 'light' : 'dark';
 
-    // 选择主色调
-    const primaryColor = await ColorPicker.show(themeType);
+    const primaryColor = await ColorPicker.show(themeType, async (hex) => {
+      const decorations = this.generateDecorations(hex, themeType);
+      await this.themeService.applyDecorationsOnly(decorations);
+    });
 
     if (!primaryColor) {
+      await this.themeService.restoreFromSnapshot(snapshot);
+      this.folderDetectionService.resume();
       return undefined;
     }
 
-    // 生成装饰色
     const decorations = this.generateDecorations(primaryColor, themeType);
+    this.folderDetectionService.resume();
 
     return {
       colorTheme: selectedTheme.id,
@@ -172,10 +277,12 @@ export class SetFolderThemeCommand {
   }
 
   /**
-   * 快速颜色配置
+   * 快速颜色配置（支持实时预览）
    */
   private async quickColorConfiguration(): Promise<ColorScheme | undefined> {
-    // 只设置边框/标题栏颜色，保持当前主题
+    const snapshot = this.themeService.snapshotCurrentState();
+    this.folderDetectionService.suppress();
+
     const currentTheme = this.themeService.getCurrentTheme();
 
     // 判断当前主题类型
@@ -183,13 +290,19 @@ export class SetFolderThemeCommand {
     const currentThemeInfo = themes.find(t => t.id === currentTheme);
     const themeType: 'light' | 'dark' = currentThemeInfo?.type === 'vs' || currentThemeInfo?.type === 'hc-light' ? 'light' : 'dark';
 
-    const color = await ColorPicker.show(themeType);
+    const color = await ColorPicker.show(themeType, async (hex) => {
+      const decorations = this.generateDecorations(hex, themeType);
+      await this.themeService.applyDecorationsOnly(decorations);
+    });
 
     if (!color) {
+      await this.themeService.restoreFromSnapshot(snapshot);
+      this.folderDetectionService.resume();
       return undefined;
     }
 
     const decorations = this.generateDecorations(color, themeType);
+    this.folderDetectionService.resume();
 
     return {
       colorTheme: currentTheme,

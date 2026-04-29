@@ -16,7 +16,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const folderDetectionService = new FolderDetectionService(configManager, themeService);
 
   // 初始化命令
-  const setFolderThemeCmd = new SetFolderThemeCommand(configManager, themeService);
+  const setFolderThemeCmd = new SetFolderThemeCommand(configManager, themeService, folderDetectionService);
   const removeFolderThemeCmd = new RemoveFolderThemeCommand(configManager, themeService);
   const listFolderThemesCmd = new ListFolderThemesCommand(configManager, themeService);
 

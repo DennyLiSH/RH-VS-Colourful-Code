@@ -78,16 +78,20 @@ export class ColorPicker {
   }
 
   /**
-   * 显示颜色选择器
+   * 显示颜色选择器（支持实时预览）
    * @param themeType 主题类型，用于显示对应的提示文字
+   * @param onPreviewColor 预览回调，用户上下移动时触发
    * @returns 选中的颜色 hex 值，或 undefined（用户取消）
    */
-  static async show(themeType?: 'light' | 'dark'): Promise<string | undefined> {
+  static async show(
+    themeType?: 'light' | 'dark',
+    onPreviewColor?: (hex: string) => Promise<void>
+  ): Promise<string | undefined> {
     const placeHolder = themeType === 'light'
-      ? 'Choose a color for Light theme (light colors recommended)'
+      ? 'Choose a color for Light theme (Up/Down to preview)'
       : themeType === 'dark'
-        ? 'Choose a color for Dark theme (dark colors recommended)'
-        : 'Choose a color for your workspace';
+        ? 'Choose a color for Dark theme (Up/Down to preview)'
+        : 'Choose a color (Up/Down to preview)';
 
     const items: ColorPickItem[] = [
       ...this.PRESET_COLORS.map(c => ({
@@ -99,22 +103,61 @@ export class ColorPicker {
       { label: '$(pencil) Enter Custom Hex...', colorHex: '', isCustom: true }
     ];
 
-    const selected = await vscode.window.showQuickPick(items, {
-      placeHolder,
-      matchOnDescription: true,
-      matchOnDetail: true,
+    const quickPick = vscode.window.createQuickPick<ColorPickItem>();
+    quickPick.items = items;
+    quickPick.placeholder = placeHolder;
+    quickPick.matchOnDescription = true;
+    quickPick.matchOnDetail = true;
+    quickPick.canSelectMany = false;
+
+    let previewTimeout: ReturnType<typeof setTimeout> | undefined;
+    let resolved = false;
+
+    const result = await new Promise<string | undefined>((resolve) => {
+      quickPick.onDidAccept(() => {
+        resolved = true;
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        const selected = quickPick.activeItems[0];
+        quickPick.hide();
+
+        if (!selected) {
+          resolve(undefined);
+          return;
+        }
+
+        if (selected.isCustom) {
+          this.showHexInput().then(resolve);
+          return;
+        }
+
+        resolve(selected.colorHex);
+      });
+
+      quickPick.onDidChangeActive((activeItems) => {
+        if (resolved || !onPreviewColor) { return; }
+        const active = activeItems[0];
+        if (!active || active.isCustom || !active.colorHex) { return; }
+
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        previewTimeout = setTimeout(() => {
+          previewTimeout = undefined;
+          onPreviewColor(active.colorHex);
+        }, 200);
+      });
+
+      quickPick.onDidHide(() => {
+        if (previewTimeout) { clearTimeout(previewTimeout); }
+        if (!resolved) {
+          resolved = true;
+          resolve(undefined);
+        }
+      });
+
+      quickPick.show();
     });
 
-    if (!selected) {
-      return undefined;
-    }
-
-    if (selected.isCustom) {
-      // 回退到输入框
-      return await this.showHexInput();
-    }
-
-    return selected.colorHex;
+    quickPick.dispose();
+    return result;
   }
 
   /**

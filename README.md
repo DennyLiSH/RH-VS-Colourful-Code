@@ -14,6 +14,7 @@ Working with multiple projects in a multi-root workspace? Keep forgetting which 
 
 - **Per-Folder Themes** — Assign a unique color theme to each workspace folder
 - **Auto-Switch** — Automatically switch themes based on the active file's folder
+- **Live Preview** — See colors and themes applied in real-time as you scroll through options (press Esc to cancel)
 - **Three Configuration Modes** — Choose from preset schemes, custom color + theme, or quick UI-only config
 - **Light & Dark Themes** — Full support for both light and dark color schemes with 21 built-in presets
 - **Dynamic Theme Detection** — Automatically discovers all installed themes from extensions
@@ -54,9 +55,11 @@ Press `Ctrl+Shift+P` to open the command palette:
 
 When you run **Set Folder Color Scheme**, you'll choose from three modes:
 
-1. **Preset Scheme** — Pick from 21 built-in color presets (13 dark + 8 light). Each preset shows a color icon and theme type indicator.
-2. **Custom Color** — Select any installed color theme, then pick a custom color. The theme applies instantly so you can preview before choosing the color.
-3. **Quick Config** — Keep your current theme and only change the UI accent colors (title bar, activity bar, status bar, tabs, etc.).
+1. **Preset Scheme** — Pick from 21 built-in color presets (13 dark + 8 light). Scroll through options to preview each scheme live.
+2. **Custom Color** — Select any installed color theme (scroll to preview), then pick a custom accent color (scroll to preview decorations).
+3. **Quick Config** — Keep your current theme and only change the UI accent colors. Scroll through colors to preview in real-time.
+
+> **Tip**: In all selection modes, use `Up`/`Down` arrows to preview. Press `Esc` to cancel and restore the original state.
 
 ### Managing Existing Schemes
 
@@ -109,6 +112,7 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 - **文件夹主题绑定** — 为每个工作区文件夹设置独立的颜色方案
 - **自动切换** — 根据当前活动文件所在文件夹自动切换主题
+- **实时预览** — 上下滚动即可预览颜色和主题效果，按 Esc 取消恢复
 - **三种配置模式** — 预设方案、自定义颜色+主题、快速 UI 配置
 - **明暗主题全支持** — 内置 21 种预设配色（13 款暗色 + 8 款亮色）
 - **动态主题检测** — 自动发现所有已安装扩展贡献的主题
@@ -149,9 +153,11 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 执行 **Set Folder Color Scheme** 后，可选择三种模式：
 
-1. **Preset Scheme（预设方案）** — 从 21 种内置配色中选择（13 款暗色 + 8 款亮色）。每个预设显示颜色图标和主题类型标识。
-2. **Custom Color（自定义颜色）** — 选择任意已安装的主题，再挑选自定义颜色。主题会即时应用，方便你在选择颜色前预览效果。
-3. **Quick Config（快速配置）** — 保持当前主题，仅修改 UI 强调色（标题栏、活动栏、状态栏、标签页等）。
+1. **Preset Scheme（预设方案）** — 从 21 种内置配色中选择（13 款暗色 + 8 款亮色）。滚动选项可实时预览完整配色效果。
+2. **Custom Color（自定义颜色）** — 选择任意已安装的主题（滚动预览），再挑选自定义强调色（滚动预览装饰色效果）。
+3. **Quick Config（快速配置）** — 保持当前主题，仅修改 UI 强调色。滚动颜色可实时预览效果。
+
+> **提示**：所有选择模式均支持上下方向键实时预览，按 `Esc` 可取消并恢复原始状态。
 
 ### 管理已有方案
 

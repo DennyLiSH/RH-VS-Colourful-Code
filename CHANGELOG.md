@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4] - 2026-04-30
+
+### Added
+
+- **Live preview for all selection flows** — Color, theme, and preset pickers now preview changes in real-time as you scroll through options, matching the VS Code built-in theme picker behavior
+  - 200ms debounce prevents flicker during rapid scrolling
+  - Press `Esc` at any time to cancel and restore the original state
+- **Theme preview in Custom mode** — Scroll through installed themes to preview them instantly before selecting
+- **Color preview in Custom and Quick modes** — Scroll through accent colors to see UI decorations update in real-time
+- **Preset preview** — Scroll through built-in presets to preview the full color scheme (theme + decorations)
+
 ## [0.1.3] - 2026-04-25
 
 ### Added
